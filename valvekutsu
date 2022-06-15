@@ -1,0 +1,37 @@
+# Importing modules/libraries
+import discord
+
+# Creating client instance - this will be used to interact with the Discord API (connection to Discord)
+client = discord.Client()
+key = "OTg2Mjc4NjUxNDYzMDk0Mzcy.GWWG45.cFValRsE2ZTRk3v4WZ_jxoKoxfp1KVPKVpl_uA"
+
+# These are all the words you want to block (the last 2 items are so the bot also deletes messages
+# containing links) - You can add as many terms in here as you'd like.
+block_words = ["fuck","munn","putsi","bitch",'asshole',"arsehole","as useful as tits on a bull","balls","beaver","beef curtains","bell","bellend",'bent','berk','bint','bitch','blighter','blimey','bloodclaat','bloody','bloody hell','blooming','bollocks','bonk','bugger','bugger me','bugger off','built like a brick shit-house','bukkake','bullshit','cack','cad','chav','cheese eating surrender monkey','choad,chuffer','clunge','cobblers','cock','cock cheese','cock jockey','cock-up','cocksucker','cockwomble','codger','cor blimey','corey','cow','crap','crikey','cunt','daft','daft cow','damn','dick','dickhead','did he bollocks!','did i fuck as like!','dildo','dodgy','duffer','fanny','feck','flaps','fuck','fuck me sideways!','fucking cunt','fucktard','gash','ginger','git','gob shite','goddam','gorblimey','gordon bennett','gormless','hes a knob','hell','hobknocker','Id rather snort my own cum','jesus christ','jizz','knob','knobber','knobend','knobhead','ligger','like fucking a dying mans handshake','mad as a hatter','manky','minge','minger','minging','motherfucker','munter','muppet','naff','nitwit','noncenumpty','nutter','off their rocker','penguin','pillock','pish','piss off','piss-flaps','pissed','pissed off','play the five-fingered fluteplonker','ponce','poof','pouf','poxy','prat','prick','prick','prickteaser','punani','punny','pussy','randy','rapey','rotter','rubbish','scrubber','shag','shit','shite','shitfaced','skank','slag','slapper','slutsnatch','sod','sod-off','son of a bitch','spunk','stick it up your arse!','tart','tits','toff','tosser','trollop','tuss','twat','twonk','wally','wanker','wankstain','wazzack','whore','https://www.cs.cmu.edu/~biglou/resources/bad-words.txt']
+f = open("curse_word_1", "r")
+
+# The on_ready event happens when the bot comes online
+@client.event
+async def on_ready():
+    print(f"Bot logged in as {client.user}")  # Printing the bot's name when it comes online
+
+
+# The on_message event happens when a message gets sent on the server
+@client.event
+async def on_message(msg):
+    # If the message wasn't sent by the bot
+    if msg.author != client.user:
+
+        # Going through each blocked word to check if it's in the message
+        for text in block_words:
+            # Checking if the message was sent by a moderator (because it would be nice if moderators
+            # could share links in case it would be important for them to do so).
+            if "Moderator" not in str(msg.author.roles) and text in str(msg.content.lower()):
+                await msg.delete()  # Deletes the message
+                return  # So that we don't continue going throuh the loop once we've already found
+                # a blocked word
+
+        print("Not Deleting...")  # This will be printed if the bot doesn't delete a message
+
+
+client.run(key)  # Running the bot
